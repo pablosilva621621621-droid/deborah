@@ -6,39 +6,36 @@
 
 import pg from 'pg';
 import dotenv from 'dotenv';
+import dns from 'dns';
 
 dotenv.config();
 
 const { Pool } = pg;
 
-// Configuração do pool de conexões com timeout aumentado
-// Suporta tanto DATABASE_URL quanto variáveis individuais (PG*)
+// Força DNS resolver para IPv4 apenas
+dns.setDefaultResultOrder('ipv4first');
+
+// Verifica se DATABASE_URL está configurado
+if (!process.env.DATABASE_URL) {
+  console.error('❌ ERRO: DATABASE_URL não está configurado!');
+  console.error('Configure a variável DATABASE_URL no Railway');
+  process.exit(1);
+}
+
+// Configuração do pool - APENAS DATABASE_URL
 const poolConfig = {
+  connectionString: process.env.DATABASE_URL,
   ssl: process.env.NODE_ENV === 'production' ? {
-    rejectUnauthorized: false // Necessário para Supabase e Railway
+    rejectUnauthorized: false
   } : false,
-  max: 20, // Máximo de conexões no pool
+  max: 20,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 15000, // Aumentado para 15 segundos
-  query_timeout: 15000, // Timeout de query
-  statement_timeout: 15000, // Timeout de statement
-  // Força IPv4 para evitar problemas com IPv6
-  family: 4,
-  // Configurações adicionais para Railway
+  connectionTimeoutMillis: 20000,
+  query_timeout: 20000,
+  statement_timeout: 20000,
   keepAlive: true,
   keepAliveInitialDelayMillis: 10000,
 };
-
-// Prioriza DATABASE_URL se existir, senão usa variáveis individuais
-if (process.env.DATABASE_URL) {
-  poolConfig.connectionString = process.env.DATABASE_URL;
-} else {
-  poolConfig.host = process.env.PGHOST;
-  poolConfig.port = process.env.PGPORT || 5432;
-  poolConfig.user = process.env.PGUSER;
-  poolConfig.password = process.env.PGPASSWORD;
-  poolConfig.database = process.env.PGDATABASE;
-}
 
 export const pool = new Pool(poolConfig);
 

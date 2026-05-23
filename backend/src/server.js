@@ -104,12 +104,15 @@ const startServer = async () => {
     console.log(`🔌 Porta: ${PORT}`);
     
     // Verifica se DATABASE_URL está configurado
-    if (!process.env.DATABASE_URL && !process.env.PGHOST) {
-      console.error('\n❌ ERRO: Variável DATABASE_URL não configurada!');
+    if (!process.env.DATABASE_URL) {
+      console.error('\n❌ ERRO: DATABASE_URL não está configurado!');
       console.error('Configure DATABASE_URL nas variáveis de ambiente do Railway');
+      console.error('\nFormato esperado:');
+      console.error('DATABASE_URL=postgresql://user:password@host:5432/database');
       process.exit(1);
     }
     
+    console.log('🔗 DATABASE_URL configurado');
     console.log('\n🔄 Testando conexão com banco de dados...');
     
     // Testa conexão com banco
@@ -117,6 +120,7 @@ const startServer = async () => {
     
     if (!connected) {
       console.error('\n❌ Falha na conexão com banco de dados');
+      console.error('Verifique se o DATABASE_URL está correto e o banco está acessível');
       process.exit(1);
     }
 
