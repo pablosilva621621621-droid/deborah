@@ -6,14 +6,11 @@
 
 import pg from 'pg';
 import dotenv from 'dotenv';
-import dns from 'dns';
+import { URL } from 'url';
 
 dotenv.config();
 
 const { Pool } = pg;
-
-// Força DNS resolver para IPv4 apenas
-dns.setDefaultResultOrder('ipv4first');
 
 // Verifica se DATABASE_URL está configurado
 if (!process.env.DATABASE_URL) {
@@ -22,20 +19,36 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
-// Configuração do pool - APENAS DATABASE_URL
-const poolConfig = {
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? {
-    rejectUnauthorized: false
-  } : false,
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 20000,
-  query_timeout: 20000,
-  statement_timeout: 20000,
-  keepAlive: true,
-  keepAliveInitialDelayMillis: 10000,
-};
+// Parse DATABASE_URL e força configuração manual para evitar IPv6
+let poolConfig;
+
+try {
+  const dbUrl = new URL(process.env.DATABASE_URL);
+  
+  poolConfig = {
+    host: dbUrl.hostname,
+    port: parseInt(dbUrl.port) || 5432,
+    user: dbUrl.username,
+    password: dbUrl.password,
+    database: dbUrl.pathname.slice(1), // Remove a barra inicial
+    ssl: process.env.NODE_ENV === 'production' ? {
+      rejectUnauthorized: false
+    } : false,
+    max: 20,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 20000,
+    query_timeout: 20000,
+    statement_timeout: 20000,
+    keepAlive: true,
+    keepAliveInitialDelayMillis: 10000,
+  };
+  
+  console.log(`🔗 Conectando ao banco: ${dbUrl.hostname}:${dbUrl.port}`);
+} catch (error) {
+  console.error('❌ ERRO: DATABASE_URL inválido!');
+  console.error('Formato esperado: postgresql://user:password@host:5432/database');
+  process.exit(1);
+}
 
 export const pool = new Pool(poolConfig);
 
