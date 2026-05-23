@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard · Deborah Birthday Party</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/imagens/deborah.png" />
+  <link rel="shortcut icon" type="image/png" href="/imagens/deborah.png" />
+  <link rel="apple-touch-icon" href="/imagens/deborah.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;500&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="/dashboard/styles.css" />
+</head>
+<body>
+
+<main class="page" aria-label="Dashboard de confirmações">
+
+  <!-- ── Card 1: Identidade + info evento ── -->
+  <div class="card">
+    <div class="top-header">
+      <div class="dashboard-image-container">
+        <img src="/imagens/deborah.png" alt="Deborah Birthday Party Dashboard" class="dashboard-image" />
+      </div>
+      
+      <button class="refresh-btn" id="refreshBtn" aria-label="Atualizar dados">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+          <path d="M11 6.5A4.5 4.5 0 1 1 6.5 2c1.3 0 2.47.55 3.3 1.43" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          <polyline points="9.5,1 9.8,3.4 7.4,3.7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Atualizar
+      </button>
+      
+      <p class="last-update" id="lastUpdate">Última atualização: agora</p>
+    </div>
+  </div>
+
+  <!-- ── Card 2: Métricas ── -->
+  <div class="card">
+    <p class="section-label">Resumo de Confirmações</p>
+
+    <div class="metrics-grid" aria-label="Contagem de confirmações">
+      <div class="metric-card">
+        <span class="metric-icon" aria-hidden="true">🌸</span>
+        <span class="metric-number going" id="countGoing">0</span>
+        <span class="metric-label">Confirmados</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-icon" aria-hidden="true">🥺</span>
+        <span class="metric-number not-going" id="countNotGoing">0</span>
+        <span class="metric-label">Não Irão</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-icon" aria-hidden="true">♡</span>
+        <span class="metric-number total" id="countTotal">0</span>
+        <span class="metric-label">Total Respostas</span>
+      </div>
+    </div>
+
+    <div style="margin-top: 22px;">
+      <div class="progress-wrap" aria-label="Proporção de confirmados">
+        <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+      </div>
+      <p class="progress-caption" id="progressCaption">Nenhuma resposta ainda</p>
+    </div>
+  </div>
+
+  <!-- ── Card 3: Listas ── -->
+  <div class="card">
+    <p class="section-label">Lista de Convidados</p>
+
+    <div class="lists-grid">
+      <!-- Quem vai -->
+      <div class="list-panel" aria-label="Lista de quem confirmou presença">
+        <div class="list-header">
+          <span class="list-title">
+            <span class="list-title-icon" aria-hidden="true">🌸</span>
+            Confirmados
+          </span>
+          <span class="list-badge" id="badgeGoing">0</span>
+        </div>
+        <div id="listGoing">
+          <div class="empty-state">
+            <span class="empty-icon" aria-hidden="true">🌸</span>
+            <p class="empty-text">Nenhuma confirmação ainda</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quem não vai -->
+      <div class="list-panel" aria-label="Lista de quem não irá">
+        <div class="list-header">
+          <span class="list-title">
+            <span class="list-title-icon" aria-hidden="true">🥺</span>
+            Não Irão
+          </span>
+          <span class="list-badge" id="badgeNotGoing">0</span>
+        </div>
+        <div id="listNotGoing">
+          <div class="empty-state">
+            <span class="empty-icon" aria-hidden="true">🥺</span>
+            <p class="empty-text">Nenhuma recusa ainda</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <p>Desenvolvido por <a href="https://github.com/pabloedusilva" target="_blank" rel="noopener noreferrer">Pablo Silva</a></p>
+  </footer>
+
+</main>
+
+<script src="/dashboard/script.js"></script>
+</body>
+</html>

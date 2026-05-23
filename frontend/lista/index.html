@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confirmação de Presença · Deborah Birthday Party</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/imagens/deborah.png" />
+  <link rel="shortcut icon" type="image/png" href="/imagens/deborah.png" />
+  <link rel="apple-touch-icon" href="/imagens/deborah.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;500&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="/lista/styles.css" />
+</head>
+<body>
+
+<div class="card" role="main">
+
+  <!-- ── Cabeçalho com info do evento ── -->
+  <header class="header">
+    <div class="event-image-container">
+      <img src="/imagens/deborah.png" alt="Deborah Birthday Party" class="event-image" />
+    </div>
+
+    <div class="event-divider">Junho</div>
+
+    <div class="event-info-row" aria-label="Data e horário do evento">
+      <div class="info-block">
+        <span class="info-label">Dia</span>
+        <span class="info-value">Sábado</span>
+      </div>
+      <div class="info-block">
+        <span class="info-label">Data</span>
+        <span class="info-value big">06</span>
+      </div>
+      <div class="info-block">
+        <span class="info-label">Horário</span>
+        <span class="info-value">19:30</span>
+      </div>
+    </div>
+
+    <div class="venue">
+      <p class="venue-name">Nações Restaurante e Choperia</p>
+      <p class="venue-address">
+        Av. das Nações, 125 – Cariru<br>
+        Ipatinga – MG
+      </p>
+    </div>
+  </header>
+
+  <div class="section-sep" role="separator"></div>
+
+  <!-- ── Formulário ── -->
+  <section aria-label="Formulário de confirmação de presença">
+    <p class="form-title">Confirmar Presença</p>
+
+    <div id="form-body">
+      <div class="guests-list" id="guestsList" role="list" aria-label="Lista de convidados"></div>
+
+      <button class="add-btn" id="addGuestBtn" type="button" aria-label="Adicionar outra pessoa">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1"/>
+          <line x1="8" y1="4.5" x2="8" y2="11.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="4.5" y1="8" x2="11.5" y2="8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        Adicionar outra pessoa
+      </button>
+
+      <p class="attendance-label">Você irá comparecer?</p>
+
+      <div class="attendance-options" role="radiogroup" aria-label="Confirmação de presença">
+        <div class="attendance-option">
+          <input type="radio" name="attendance" id="opt-yes" value="yes" />
+          <label for="opt-yes">
+            <span class="option-icon">🌸</span>
+            Eu vou!
+          </label>
+        </div>
+        <div class="attendance-option">
+          <input type="radio" name="attendance" id="opt-no" value="no" />
+          <label for="opt-no">
+            <span class="option-icon">🥺</span>
+            Não vou
+          </label>
+        </div>
+      </div>
+
+      <button class="confirm-btn" id="confirmBtn" type="button" disabled>
+        Confirmar
+      </button>
+    </div>
+
+    <!-- Estado de sucesso -->
+    <div class="success-state" id="successState" role="status" aria-live="polite"></div>
+  </section>
+
+  <!-- ── Rodapé ── -->
+  <footer class="footer-quote">
+    <p>Desenvolvido por <a href="https://github.com/pabloedusilva" target="_blank" rel="noopener noreferrer">Pablo Silva</a></p>
+  </footer>
+
+</div>
+
+<script src="/lista/script.js"></script>
+</body>
+</html>
