@@ -107,12 +107,14 @@ ALLOWED_ORIGINS=https://seu-app.up.railway.app
 
 ```
 deborah/
-├── railway.json          # Configuração do Railway
+├── package.json          # Package.json raiz (detecta Node.js)
+├── railway.toml          # Configuração do Railway
 ├── nixpacks.toml         # Configuração do Nixpacks (builder)
 ├── Procfile              # Comando de start
 ├── .railwayignore        # Arquivos ignorados no deploy
+├── .npmrc                # Configuração NPM
 ├── backend/
-│   ├── package.json      # Com engines especificadas
+│   ├── package.json      # Dependências do backend
 │   ├── src/
 │   │   └── server.js     # Servidor principal
 │   └── ...
