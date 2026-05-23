@@ -4,6 +4,10 @@
   "description": "Backend API para o sistema de confirmação de presença da festa de aniversário da Deborah",
   "main": "src/server.js",
   "type": "module",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",

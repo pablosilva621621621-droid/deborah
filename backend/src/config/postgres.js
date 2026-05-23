@@ -12,17 +12,30 @@ dotenv.config();
 const { Pool } = pg;
 
 // Configuração do pool de conexões com timeout aumentado
-export const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false // Necessário para Supabase
-  },
+// Suporta tanto DATABASE_URL quanto variáveis individuais (PG*)
+const poolConfig = {
+  ssl: process.env.NODE_ENV === 'production' ? {
+    rejectUnauthorized: false // Necessário para Supabase e Railway
+  } : false,
   max: 20, // Máximo de conexões no pool
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 10000, // Aumentado para 10 segundos
   query_timeout: 10000, // Timeout de query
   statement_timeout: 10000, // Timeout de statement
-});
+};
+
+// Prioriza DATABASE_URL se existir, senão usa variáveis individuais
+if (process.env.DATABASE_URL) {
+  poolConfig.connectionString = process.env.DATABASE_URL;
+} else {
+  poolConfig.host = process.env.PGHOST;
+  poolConfig.port = process.env.PGPORT || 5432;
+  poolConfig.user = process.env.PGUSER;
+  poolConfig.password = process.env.PGPASSWORD;
+  poolConfig.database = process.env.PGDATABASE;
+}
+
+export const pool = new Pool(poolConfig);
 
 // Testa a conexão
 pool.on('connect', () => {
