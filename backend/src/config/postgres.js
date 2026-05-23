@@ -19,9 +19,14 @@ const poolConfig = {
   } : false,
   max: 20, // Máximo de conexões no pool
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 10000, // Aumentado para 10 segundos
-  query_timeout: 10000, // Timeout de query
-  statement_timeout: 10000, // Timeout de statement
+  connectionTimeoutMillis: 15000, // Aumentado para 15 segundos
+  query_timeout: 15000, // Timeout de query
+  statement_timeout: 15000, // Timeout de statement
+  // Força IPv4 para evitar problemas com IPv6
+  family: 4,
+  // Configurações adicionais para Railway
+  keepAlive: true,
+  keepAliveInitialDelayMillis: 10000,
 };
 
 // Prioriza DATABASE_URL se existir, senão usa variáveis individuais
@@ -49,27 +54,35 @@ pool.on('error', (err) => {
 });
 
 // Função para testar conexão com retry
-export const testConnection = async (retries = 3) => {
+export const testConnection = async (retries = 5) => {
   for (let i = 0; i < retries; i++) {
     try {
-      if (process.env.NODE_ENV === 'development' && i > 0) {
-        console.log(`Tentativa ${i + 1} de ${retries}...`);
+      if (i > 0) {
+        console.log(`🔄 Tentativa ${i + 1} de ${retries}...`);
       }
       const client = await pool.connect();
       const result = await client.query('SELECT NOW()');
       client.release();
-      if (process.env.NODE_ENV === 'development') {
-        console.log('✅ Conexão com banco de dados testada');
-      }
+      console.log('✅ Conexão com banco de dados estabelecida');
       return true;
     } catch (error) {
+      console.error(`❌ Tentativa ${i + 1} falhou:`, error.message);
+      
       if (i === retries - 1) {
-        console.error('❌ Não foi possível conectar ao banco de dados');
-        console.error('Erro:', error.message);
+        console.error('\n❌ Não foi possível conectar ao banco de dados após múltiplas tentativas');
+        console.error('📋 Detalhes do erro:', error.message);
+        console.error('\n🔍 Verifique:');
+        console.error('   1. DATABASE_URL está configurado corretamente');
+        console.error('   2. Banco de dados está acessível');
+        console.error('   3. Credenciais estão corretas');
+        console.error('   4. Firewall/rede permite conexão');
         return false;
       }
-      // Aguarda 2 segundos antes de tentar novamente
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Aguarda progressivamente mais tempo entre tentativas (2s, 4s, 6s, 8s)
+      const waitTime = (i + 1) * 2000;
+      console.log(`⏳ Aguardando ${waitTime/1000}s antes da próxima tentativa...`);
+      await new Promise(resolve => setTimeout(resolve, waitTime));
     }
   }
   return false;

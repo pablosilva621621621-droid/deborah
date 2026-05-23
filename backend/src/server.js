@@ -99,16 +99,32 @@ app.use('*', (req, res) => {
 // ── Inicia o servidor ────────────────────────────────────
 const startServer = async () => {
   try {
+    console.log('\n🚀 Iniciando servidor...');
+    console.log(`📦 Ambiente: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🔌 Porta: ${PORT}`);
+    
+    // Verifica se DATABASE_URL está configurado
+    if (!process.env.DATABASE_URL && !process.env.PGHOST) {
+      console.error('\n❌ ERRO: Variável DATABASE_URL não configurada!');
+      console.error('Configure DATABASE_URL nas variáveis de ambiente do Railway');
+      process.exit(1);
+    }
+    
+    console.log('\n🔄 Testando conexão com banco de dados...');
+    
     // Testa conexão com banco
     const connected = await testConnection();
     
     if (!connected) {
+      console.error('\n❌ Falha na conexão com banco de dados');
       process.exit(1);
     }
 
+    console.log('📊 Inicializando tabelas...');
     // Inicializa tabelas
     await initDatabase();
 
+    console.log('🧹 Limpando sessões expiradas...');
     // Limpa sessões expiradas
     await cleanExpiredSessions();
 
@@ -116,23 +132,21 @@ const startServer = async () => {
     setInterval(cleanExpiredSessions, 60 * 60 * 1000);
 
     // Inicia servidor
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`\n🌸 ════════════════════════════════════════════════`);
       console.log(`   Deborah Birthday Party - Sistema Completo`);
-      console.log(`   Servidor rodando em: http://localhost:${PORT}`);
+      console.log(`   Servidor rodando na porta: ${PORT}`);
       console.log(`   Ambiente: ${process.env.NODE_ENV || 'development'}`);
-      console.log(`   Banco: PostgreSQL (Supabase) ✅`);
+      console.log(`   Banco: PostgreSQL ✅`);
       console.log(`   Segurança: Ultra Secure 🔒`);
       console.log(`════════════════════════════════════════════════ 🌸`);
       console.log(``);
-      console.log(`📍 Acesse:`);
-      console.log(`   Formulário RSVP: http://localhost:${PORT}/`);
-      console.log(`   Login:           http://localhost:${PORT}/login`);
-      console.log(`   Dashboard:       http://localhost:${PORT}/dashboard`);
+      console.log(`✅ Servidor pronto para receber requisições!`);
       console.log(``);
     });
   } catch (error) {
-    console.error('❌ Erro ao iniciar servidor:', error);
+    console.error('\n❌ Erro ao iniciar servidor:', error);
+    console.error('Stack:', error.stack);
     process.exit(1);
   }
 };
